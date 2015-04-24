@@ -1,0 +1,60 @@
+/* The DWM has its own special DXGI interfaces
+ * Thanks to http://shchetinin.blogspot.de/2012/04/dwm-graphics-directx-win8win7.html for figuring it out.
+ */
+
+import "dxgi.idl";
+
+[
+    object,
+    local,
+    uuid(F69F223B-45D3-4AA0-98C8-C40C2B231029)
+]
+interface IDXGISwapChainDWM : IDXGIDeviceSubObject
+{
+    HRESULT Present(
+        [in] UINT SyncInterval,
+        [in] UINT Flags
+    );
+    HRESULT GetBuffer(
+        [in]  UINT Buffer,
+        [in]  REFIID riid,
+        [out] void **ppSurface
+    );
+    HRESULT GetDesc(
+        [out] DXGI_SWAP_CHAIN_DESC *pDesc
+    );
+    HRESULT ResizeBuffers(
+        [in] UINT BufferCount,
+        [in] UINT Width,
+        [in] UINT Height,
+        [in] DXGI_FORMAT NewFormat,
+        [in] UINT SwapChainFlags
+    );
+    HRESULT ResizeTarget(
+        [in] const DXGI_MODE_DESC *pNewTargetParameters
+    );
+    HRESULT GetContainingOutput(
+        [out] IDXGIOutput **ppOutput
+    );
+    HRESULT GetFrameStatistics(
+        [out] DXGI_FRAME_STATISTICS *pStats
+    );
+    HRESULT GetLastPresentCount(
+        [out] UINT *pLastPresentCount
+    );
+}
+
+[
+    object,
+    local,
+    uuid(713F394E-92CA-47E7-AB81-1159C2791E54)
+]
+interface IDXGIFactoryDWM : IUnknown
+{
+    HRESULT CreateSwapChain(
+        [in]  IUnknown *pDevice,
+        [in]  DXGI_SWAP_CHAIN_DESC *pDesc,
+        [in]  IDXGIOutput *pOutput,
+        [out] IDXGISwapChainDWM **ppSwapChainDWM
+    );
+}
